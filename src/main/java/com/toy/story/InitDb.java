@@ -17,6 +17,9 @@ import javax.persistence.EntityManager;
  * * userB
  * 	 * SPRING1 BOOK
  * 	 * SPRING2 BOOK
+ * 	Ctrl+Alt+M
+ *  Shitt+6
+ *
  */
 @Component
 @RequiredArgsConstructor
