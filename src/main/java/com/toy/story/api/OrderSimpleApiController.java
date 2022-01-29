@@ -5,6 +5,8 @@ import com.toy.story.domain.Order;
 import com.toy.story.domain.OrderStatus;
 import com.toy.story.repository.OrderRepository;
 import com.toy.story.repository.OrderSearch;
+import com.toy.story.repository.order.simplequery.OrderSimpleQueryDto;
+import com.toy.story.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,10 +92,10 @@ public class OrderSimpleApiController {
 
         public SimpleOrderDto(Order order) {
             orderId = order.getId();
-            name = order.getMember().getName();
+            name = order.getMember().getName(); //LAZY 초기화
             orderDate = order.getOrderDate();
             orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress();
+            address = order.getDelivery().getAddress(); //LAZY 초기화
         }
     }
 

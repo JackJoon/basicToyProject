@@ -5,6 +5,10 @@ import com.toy.story.domain.Order;
 import com.toy.story.domain.OrderItem;
 import com.toy.story.domain.OrderStatus;
 import com.toy.story.repository.OrderRepository;
+import com.toy.story.repository.order.query.OrderFlatDto;
+import com.toy.story.repository.order.query.OrderItemQueryDto;
+import com.toy.story.repository.order.query.OrderQueryDto;
+import com.toy.story.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +57,7 @@ public class OrderApiController {
         List<Order> all = orderRepository.findAll();
         for (Order order : all) {
             order.getMember().getName(); //Lazy 강제 초기화
-            order.getDelivery().getAddress(); //Lazy 강제 초기환
+            order.getDelivery().getAddress(); //Lazy 강제 초기화
             List<OrderItem> orderItems = order.getOrderItems();
             orderItems.stream().forEach(o -> o.getItem().getName()); //Lazy 강제 초기화
         }
@@ -70,6 +74,13 @@ public class OrderApiController {
         return result;
     }
 
+    /**
+     * 1대 다 컬렉션 Fetch Join 할 경우 페이징 처리 할 수 없다.(1대다 일경우 페이징을 하지 말자)
+     * 단 어플리케이션 내에 있는 페이징 처리 난다.
+     * (Out Of Memory 날 수도 있다.!!!!)
+     * 그리고 컬렉션 패치 조인은 1개만 사용 할 수 있다. 둘 이상일 경우에는 사용하면 안된다.(정학성이 떨어진다.)
+     * @return
+     */
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithItem();

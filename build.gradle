@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'		// 해당 레파지토리는 JPA에서 보여주는 쿼리와 파라미터를 하나의 쿼리문으로  보여주는 레파지토리(원래는 쿼리문 1Line, 파라미터 1Line으로 보여줬다.)
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
