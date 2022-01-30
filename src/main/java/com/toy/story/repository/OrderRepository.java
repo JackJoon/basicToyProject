@@ -1,6 +1,11 @@
 package com.toy.story.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.toy.story.domain.Order;
+import com.toy.story.domain.OrderStatus;
+import com.toy.story.domain.QMember;
+import com.toy.story.domain.QOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -100,6 +105,43 @@ public class OrderRepository {
         cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000);
         return query.getResultList();
+    }
+
+    /**
+     * JPQL Query 작성
+     * @param orderSearch
+     * @return
+     */
+    public List<Order> findAll(OrderSearch orderSearch) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        QOrder order = QOrder.order;
+        QMember member = QMember.member;
+
+
+        return query
+                .select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()), nameLike(orderSearch.getMemberName()))
+                //.where(order.status.eq(orderSearch.getOrderStatus()))
+                .limit(1000)
+                .fetch();
+
+    }
+
+    private BooleanExpression nameLike(String memberName) {
+        if(StringUtils.hasText(memberName)) {
+            return null;
+        }
+        return QMember.member.name.like(memberName);
+    }
+
+    private BooleanExpression statusEq(OrderStatus orderStatus) {
+        if (orderStatus == null ) {
+            return null;
+        }
+        return QOrder.order.status.eq(orderStatus);
     }
 
     public List<Order> findAllWithMemberDelivery() {
